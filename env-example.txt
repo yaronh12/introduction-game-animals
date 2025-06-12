@@ -1,0 +1,12 @@
+# Copy this file to .env.local and update the values
+
+# Hugging Face API Token (required for image generation)
+# Get this from https://huggingface.co/settings/tokens
+HUGGINGFACE_API_TOKEN=your_huggingface_token_here
+
+# Database file path (optional, defaults to ./students.db)
+DATABASE_URL=./students.db
+
+# App settings (optional)
+NEXT_PUBLIC_APP_NAME=Animal Introduction Game
+NEXT_PUBLIC_MAX_STUDENTS=50 

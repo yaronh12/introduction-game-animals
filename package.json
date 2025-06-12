@@ -1,0 +1,46 @@
+{
+  "name": "introduction-game-animals",
+  "version": "1.0.0",
+  "description": "An introduction game web app where students choose animals and AI generates personalized images",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": [
+    "next.js",
+    "react",
+    "introduction",
+    "game",
+    "ai",
+    "students"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^24.0.1",
+    "@types/react": "^19.1.8",
+    "@types/sqlite3": "^5.1.0",
+    "@vercel/postgres": "^0.5.1",
+    "abort-controller": "^3.0.0",
+    "dotenv": "^16.5.0",
+    "form-data": "^4.0.3",
+    "next": "^12.3.7",
+    "node-fetch": "^2.6.7",
+    "openai": "^5.3.0",
+    "pg": "^8.16.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "replicate": "^1.0.1",
+    "sqlite3": "^5.1.7",
+    "tailwindcss": "^3.3.7",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.15.4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.5"
+  }
+}
