@@ -5,13 +5,13 @@ import { cloudDb } from '../../lib/database-cloud';
 
 interface APIResponse<T> {
   success: boolean;
-  data?: T;
+  data?: T | T[];
   error?: string;
 }
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<APIResponse<Student>>
+  res: NextApiResponse<APIResponse<Student> | APIResponse<Student[]>>
 ) {
   try {
     // Initialize database
@@ -101,7 +101,7 @@ export default async function handler(
 
         return res.status(200).json({
           success: true,
-          data: student
+          data: [student]
         });
       } else {
         // Get all students
