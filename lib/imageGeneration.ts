@@ -52,7 +52,7 @@ export async function generateImagePrompt(student: Student): Promise<string> {
   const likesText = likes.slice(0, 1).join(''); // Max 1 hobby
   
   // MUCH SIMPLER prompt - under 100 characters
-  const prompt = `A ${personalityText} ${animal} enjoying ${likesText}. a realistic, photo taken style that clarify the ${animal}'s ${personalityText}, no text, and not hand drawn image.`;
+  const prompt = `A ${personalityText} ${animal} enjoying ${likesText}. a realistic style that clarify the ${animal}'s ${personalityText}, no text.`;
   
   return prompt;
 }
