@@ -19,7 +19,7 @@ export default async function handler(
     console.log('Database initialized successfully');
 
     if (req.method === 'POST') {
-      const { name, animal, personalities = [], likes = [] } = req.body;
+      const { name, animal, personalities = [], likes = [], motto } = req.body;
 
       if (!name || !animal) {
         return res.status(400).json({
@@ -45,6 +45,7 @@ export default async function handler(
         student.animal = animal;
         student.personalities = Array.isArray(personalities) ? personalities : [];
         student.likes = Array.isArray(likes) ? likes : [];
+        student.motto = motto;
       } else {
         // Create new student
         studentId = await cloudDb.addStudent({
@@ -52,6 +53,7 @@ export default async function handler(
           animal,
           personalities: Array.isArray(personalities) ? personalities : [],
           likes: Array.isArray(likes) ? likes : [],
+          motto,
           attributes: '',
           imageUrl: undefined,
           isImageGenerated: false
@@ -113,8 +115,17 @@ export default async function handler(
         });
       }
 
+    } else if (req.method === 'DELETE') {
+      // Clear all students
+      await cloudDb.clearAllStudents();
+      
+      return res.status(200).json({
+        success: true,
+        data: []
+      });
+
     } else {
-      res.setHeader('Allow', ['GET', 'POST']);
+      res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
       return res.status(405).json({
         success: false,
         error: `Method ${req.method} not allowed`

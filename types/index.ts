@@ -4,6 +4,7 @@ export interface Student {
   animal: string;
   personalities: string[];
   likes: string[];
+  motto?: string; // New field for student's animal motto
   attributes?: string; // Optional for backward compatibility
   imageUrl?: string;
   createdAt?: Date;
@@ -21,6 +22,7 @@ export interface FormData {
   animal: string;
   personalities: string[];
   likes: string[];
+  motto?: string;
 }
 
 export interface APIResponse<T> {

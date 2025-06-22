@@ -203,6 +203,16 @@ export default function HostDashboard() {
                       )}
                     </div>
                   </div>
+
+                  {/* Motto */}
+                  {student.motto && (
+                    <div className="text-sm text-gray-600 mb-2">
+                      <span className="font-medium">Motto:</span>
+                      <div className="mt-1 italic text-gray-700 bg-gray-50 p-2 rounded-lg border-l-4 border-blue-400">
+                        "{student.motto}"
+                      </div>
+                    </div>
+                  )}
                   
 
 

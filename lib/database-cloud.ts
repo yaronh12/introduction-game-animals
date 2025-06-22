@@ -1,20 +1,27 @@
 import { Student } from '../types';
 
+// Use global object to persist data across hot reloads in development
+declare global {
+  var __students: Student[] | undefined;
+  var __nextId: number | undefined;
+  var __dbInitialized: boolean | undefined;
+}
+
 // Simple in-memory database for cloud deployment
-let students: Student[] = [];
-let nextId = 1;
+let students: Student[] = global.__students || [];
+let nextId = global.__nextId || 1;
 
 // Cloud-compatible database adapter
 export class CloudDatabase {
-  private initialized: boolean = false;
+  private initialized: boolean = global.__dbInitialized || false;
 
   public async initialize(): Promise<void> {
     if (this.initialized) return;
     
     console.log('🗄️ Initializing in-memory database for cloud deployment...');
-    students = [];
-    nextId = 1;
+    // Don't reset data if it already exists - only initialize once
     this.initialized = true;
+    global.__dbInitialized = true;
     console.log('✅ In-memory database initialized successfully');
   }
 
@@ -27,6 +34,7 @@ export class CloudDatabase {
       animal: student.animal,
       personalities: student.personalities || [],
       likes: student.likes || [],
+      motto: student.motto,
       attributes: student.attributes || '',
       imageUrl: student.imageUrl || undefined,
       isImageGenerated: student.isImageGenerated || false,
@@ -34,6 +42,8 @@ export class CloudDatabase {
     };
     
     students.push(newStudent);
+    global.__students = students;
+    global.__nextId = nextId;
     console.log(`✅ Added student: ${newStudent.name} (ID: ${newStudent.id})`);
     return newStudent.id!;
   }
@@ -60,6 +70,7 @@ export class CloudDatabase {
     if (student) {
       student.imageUrl = imageUrl;
       student.isImageGenerated = true;
+      global.__students = students;
       console.log(`✅ Updated image for student ID ${studentId}`);
     }
   }
@@ -73,6 +84,16 @@ export class CloudDatabase {
       const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
       return dateB - dateA;
     });
+  }
+
+  public async clearAllStudents(): Promise<void> {
+    await this.initialize();
+    
+    students = [];
+    nextId = 1;
+    global.__students = students;
+    global.__nextId = nextId;
+    console.log('✅ Cleared all students from database');
   }
 
   private parseJsonArray(jsonString: string): string[] {

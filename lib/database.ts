@@ -52,6 +52,7 @@ export class Database {
         animal TEXT NOT NULL,
         personalities TEXT NOT NULL DEFAULT '[]',
         likes TEXT NOT NULL DEFAULT '[]',
+        motto TEXT,
         attributes TEXT NOT NULL DEFAULT '',
         imageUrl TEXT,
         isImageGenerated BOOLEAN DEFAULT FALSE,
@@ -78,6 +79,12 @@ export class Database {
     this.db.run(`ALTER TABLE students ADD COLUMN likes TEXT DEFAULT '[]'`, (err) => {
       if (err && !err.message.includes('duplicate column')) {
         console.error('Error adding likes column:', err.message);
+      }
+    });
+
+    this.db.run(`ALTER TABLE students ADD COLUMN motto TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding motto column:', err.message);
       } else {
         console.log('Database initialized successfully');
       }
@@ -100,6 +107,7 @@ export class Database {
           animal TEXT NOT NULL,
           personalities TEXT NOT NULL DEFAULT '[]',
           likes TEXT NOT NULL DEFAULT '[]',
+          motto TEXT,
           attributes TEXT NOT NULL DEFAULT '',
           imageUrl TEXT,
           isImageGenerated BOOLEAN DEFAULT FALSE,
@@ -120,8 +128,8 @@ export class Database {
             const likes = row.likes ? [row.likes] : [];
             
             const insertSQL = `
-              INSERT INTO students_new (name, animal, personalities, likes, attributes, imageUrl, isImageGenerated, createdAt)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+              INSERT INTO students_new (name, animal, personalities, likes, motto, attributes, imageUrl, isImageGenerated, createdAt)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
             
             this.db.run(insertSQL, [
@@ -129,6 +137,7 @@ export class Database {
               row.animal,
               JSON.stringify(personalities),
               JSON.stringify(likes),
+              row.motto || null,
               row.attributes || '',
               row.imageUrl,
               row.isImageGenerated || false,
@@ -169,8 +178,8 @@ export class Database {
   public addStudent(student: Omit<Student, 'id' | 'createdAt'>): Promise<number> {
     return new Promise((resolve, reject) => {
       const sql = `
-        INSERT INTO students (name, animal, personalities, likes, attributes, imageUrl, isImageGenerated)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO students (name, animal, personalities, likes, motto, attributes, imageUrl, isImageGenerated)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `;
       
       const personalitiesJson = JSON.stringify(student.personalities || []);
@@ -178,7 +187,7 @@ export class Database {
       
       this.db.run(
         sql,
-        [student.name, student.animal, personalitiesJson, likesJson, student.attributes || '', student.imageUrl || null, student.isImageGenerated || false],
+        [student.name, student.animal, personalitiesJson, likesJson, student.motto || null, student.attributes || '', student.imageUrl || null, student.isImageGenerated || false],
         function(err) {
           if (err) {
             reject(err);
@@ -207,6 +216,7 @@ export class Database {
               animal: row.animal,
               personalities: this.parseJsonArray(row.personalities || row.personalities_new, row.personality),
               likes: this.parseJsonArray(row.likes || row.likes_new, row.likes),
+              motto: row.motto,
               attributes: row.attributes,
               imageUrl: row.imageUrl,
               isImageGenerated: Boolean(row.isImageGenerated),
@@ -225,7 +235,7 @@ export class Database {
     return new Promise((resolve, reject) => {
       const sql = `
         UPDATE students 
-        SET name = ?, animal = ?, personalities = ?, likes = ?, attributes = ?, imageUrl = ?, isImageGenerated = ?
+        SET name = ?, animal = ?, personalities = ?, likes = ?, motto = ?, attributes = ?, imageUrl = ?, isImageGenerated = ?
         WHERE id = ?
       `;
       
@@ -234,7 +244,7 @@ export class Database {
 
       this.db.run(
         sql,
-        [student.name, student.animal, personalitiesJson, likesJson, student.attributes || '', student.imageUrl || null, student.isImageGenerated || false, studentId],
+        [student.name, student.animal, personalitiesJson, likesJson, student.motto || null, student.attributes || '', student.imageUrl || null, student.isImageGenerated || false, studentId],
         function(err) {
           if (err) {
             reject(err);
@@ -261,6 +271,7 @@ export class Database {
               animal: row.animal,
               personalities: this.parseJsonArray(row.personalities || row.personalities_new, row.personality),
               likes: this.parseJsonArray(row.likes || row.likes_new, row.likes),
+              motto: row.motto,
               attributes: row.attributes,
               imageUrl: row.imageUrl,
               isImageGenerated: Boolean(row.isImageGenerated),
@@ -306,6 +317,7 @@ export class Database {
               animal: row.animal,
               personalities: this.parseJsonArray(row.personalities || row.personalities_new, row.personality),
               likes: this.parseJsonArray(row.likes || row.likes_new, row.likes),
+              motto: row.motto,
               attributes: row.attributes,
               imageUrl: row.imageUrl,
               isImageGenerated: Boolean(row.isImageGenerated),

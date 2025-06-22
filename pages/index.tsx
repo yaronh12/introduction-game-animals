@@ -8,11 +8,13 @@ export default function Home() {
     animal: string;
     personalities: string;
     likes: string;
+    motto: string;
   }>({
     name: '',
     animal: '',
     personalities: '',
-    likes: ''
+    likes: '',
+    motto: ''
   });
   const [selectedAnimal, setSelectedAnimal] = useState<AnimalOption | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,7 +40,7 @@ export default function Home() {
     setError('');
 
     if (!formData.name || !formData.animal || !formData.personalities || !formData.likes) {
-      setError('Please fill in all fields');
+      setError('Please fill in all required fields');
       return;
     }
 
@@ -53,7 +55,8 @@ export default function Home() {
         name: formData.name,
         animal: formData.animal,
         personalities,
-        likes
+        likes,
+        motto: formData.motto.trim() || undefined
       };
 
       const response = await fetch('/api/students', {
@@ -176,6 +179,23 @@ export default function Home() {
             />
             <p className="text-sm text-gray-500 mt-2">
               Tell us what you enjoy doing!
+            </p>
+          </div>
+
+          {/* Motto Input */}
+          <div>
+            <label className="block text-base sm:text-lg font-semibold text-gray-700 mb-3">
+              Your Animal's Motto <span className="text-sm text-gray-500 font-normal">(Optional)</span>
+            </label>
+            <input
+              type="text"
+              value={formData.motto}
+              onChange={(e) => handleInputChange('motto', e.target.value)}
+              className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-purple-300 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md"
+              placeholder="e.g., Always be curious, Live life to the fullest, Dream big!"
+            />
+            <p className="text-sm text-gray-500 mt-2">
+              What's your animal character's life motto or favorite saying?
             </p>
           </div>
 
